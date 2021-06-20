@@ -73,7 +73,7 @@ class _LightSettingPageState extends State<LightSettingPage> {
                       size: 80,
                     ),
                   ),
-                  Text('Fan Çalışma Saatleri için tıklayınız:',
+                  Text('Aydınlatma Saatleri için tıklayınız:',
                       style: TextStyle(fontSize: 20)),
                   SizedBox(
                     height: 50,
