@@ -1,112 +1,270 @@
-import 'package:doa_1_0/models/client.dart';
+import 'package:doa_1_0/models/client_model.dart';
+import 'package:doa_1_0/services/calculator.dart';
+import 'package:doa_1_0/services/constants.dart';
+import 'package:doa_1_0/view_models/client_state_provider.dart';
+import 'package:doa_1_0/views/setting_fan.dart';
+import 'package:doa_1_0/views/setting_light.dart';
+import 'package:doa_1_0/widgets/alert_dialogs.dart';
+import 'package:doa_1_0/widgets/toggle_switch.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class DevicePage extends StatelessWidget {
+class DevicePage extends StatefulWidget {
+  static String routeName = '/devicePage';
+  final bool wateringOn;
+  final bool fanOn;
+  final bool lightingOn;
   final int unitId;
-  DevicePage({this.unitId});
-  final ClientData _clientData = ClientData(
-      userId: 123456,
-      companyName: 'ABC Company',
-      temperature: 20,
-      humidity: 64,
-      units: <Unit>[
-        Unit(id: 1, type: 'compact', isActive: true),
-        Unit(
-          id: 2,
-          type: 'medium',
-          isActive: true,
-        ),
-        Unit(
-          id: 3,
-          type: 'compact',
-          isActive: false,
-        ),
-        Unit(id: 4, type: 'large', isActive: true),
-        Unit(id: 5, type: 'large', isActive: true),
-        Unit(id: 6, type: 'large', isActive: false)
-      ]);
+  DevicePage({this.unitId, this.wateringOn, this.fanOn, this.lightingOn});
+
+  @override
+  _DevicePageState createState() => _DevicePageState();
+}
+
+class _DevicePageState extends State<DevicePage> {
+  @override
+  void initState() {
+    super.initState();
+    Unit _unit = Provider.of<ClientState>(context, listen: false)
+        .units
+        .firstWhere((element) => element.unitId == widget.unitId);
+    if (!_unit.waterLevelOk) {
+      showWaterLevelDialog(context);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final double _imageWidth = MediaQuery.of(context).size.width * 0.5;
 
-    return Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.green[700]),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          backgroundColor: Colors.green[50],
-          title: Text('Ünite Detay Bilgisi',
-              style: TextStyle(color: Colors.green[700])),
-        ),
-        body: Center(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(12, 30, 12, 20),
-            child: Column(
-              children: [
-                Image.asset(
-                  'assets/doa_logo.png',
-                  width: _imageWidth,
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Text('Ünite: $unitId',
-                    style: Theme.of(context).textTheme.headline4),
-                SizedBox(
-                  height: 20,
-                ),
-                Row(
-                  children: [
-                    Flexible(
-                        flex: 1, child: Image.asset('assets/unit_image.png')),
-                    Flexible(
-                      flex: 3,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _buildInfoCard(context, 'Sulama',
-                                _clientData.units[unitId - 1].water),
-                            Divider(),
-                            _buildInfoCard(context, 'Fan',
-                                _clientData.units[unitId - 1].fan),
-                            Divider(),
-                            _buildInfoCard(context, 'Aydınlatma',
-                                _clientData.units[unitId - 1].light)
-                          ],
-                        ),
+    ///UnitId'ye göre bu sayfada kullanılacak unit bilgisi _clientState.units
+    Unit _unit = Provider.of<ClientState>(context)
+        .units
+        .firstWhere((element) => element.unitId == widget.unitId);
+
+    return WillPopScope(
+      onWillPop: () async {
+        await Provider.of<ClientState>(context, listen: false)
+            .getClientDataFromApi();
+        Navigator.pop(context);
+        //return Future.value(false);
+        return false;
+      },
+      child: Scaffold(
+          appBar: _buildAppBar(context, _unit),
+          body: Center(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(0, 30, 12, 0),
+              child: Column(
+                children: [
+                  _buildLogo(_imageWidth),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  _buildDeviceSummary(_unit, context),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Expanded(
+                    flex: 5,
+                    child: Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildWateringCard(context, _unit),
+                          Divider(),
+                          Row(
+                            children: [
+                              Expanded(
+                                  flex: 16,
+                                  child: _buildFanCard(context, _unit)),
+                              Expanded(
+                                flex: 3,
+                                child: ToggleSwitch(
+                                    status: widget.fanOn,
+                                    unitId: widget.unitId,
+                                    toggleType: 2),
+                              )
+                            ],
+                          ),
+                          Divider(),
+                          Row(
+                            children: [
+                              Expanded(
+                                  flex: 16,
+                                  child: _buildLightingCard(context, _unit)),
+                              Expanded(
+                                flex: 3,
+                                child: ToggleSwitch(
+                                  status: widget.lightingOn,
+                                  toggleType: 3,
+                                  unitId: widget.unitId,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Divider()
+                        ],
                       ),
-                    )
-                  ],
-                )
-              ],
+                    ),
+                  )
+                ],
+              ),
             ),
-          ),
-        ));
+          )),
+    );
   }
 
-  _buildInfoCard(BuildContext context, String title, Map<String, dynamic> map) {
-    List<String> activeDays = [];
-    map.forEach((key, value) {
-      if (value == true) {
-        activeDays.add(key);
-      }
-    });
+  Widget _buildDeviceSummary(Unit _unit, BuildContext context) {
+    return Row(
+      // Cihaz imajı ve sıcaklık bilgilerinin içeren Row
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SizedBox(width: 80, child: Image.asset('assets/unit_image.png')),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _unit.waterLevelOk
+                ? Text('Su Seviyesi: Uygun',
+                    style: Theme.of(context).textTheme.subtitle1)
+                : Text('Su Seviyesi: Kritik',
+                    style: Theme.of(context)
+                        .textTheme
+                        .subtitle1
+                        .copyWith(color: Colors.red)),
+            Text('Sıcaklık: ${_unit.temperature} °C',
+                style: Theme.of(context).textTheme.subtitle1),
+            Text('Nem: ${_unit.humidity} %',
+                style: Theme.of(context).textTheme.subtitle1),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildLogo(double _imageWidth) {
+    return Image.asset(
+      'assets/logo_ver2.png',
+      width: _imageWidth,
+    );
+  }
+
+  AppBar _buildAppBar(BuildContext context, Unit _unit) {
+    return AppBar(
+      /*   leading: IconButton(
+        icon: Icon(Icons.arrow_back, color: Colors.white),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+      ),*/
+      backgroundColor: Constants.mainGreen,
+      title: Text('Ünite ${_unit.unitId} Durum',
+          style: TextStyle(color: Colors.white)),
+    );
+  }
+
+  Widget _buildWateringCard(BuildContext context, Unit unit) {
+    final localizations = MaterialLocalizations.of(context);
+    String startTime = localizations.formatTimeOfDay(
+        Calculator.createTimeOfDayFromInt(unit.watering[0].startTimeA),
+        alwaysUse24HourFormat: true);
+    String endTime = localizations.formatTimeOfDay(
+        Calculator.createTimeOfDayFromInt(unit.watering[0].endTimeA),
+        alwaysUse24HourFormat: true);
+
+    return ListTile(
+      leading: Padding(
+        padding: const EdgeInsets.only(right: 2),
+        child: ImageIcon(
+          AssetImage('assets/watering_icon.jpg'),
+          color: Colors.green[700],
+          size: 30,
+        ),
+      ),
+      title: Text('SULAMA', style: Theme.of(context).textTheme.headline6),
+      subtitle: Text('$startTime - $endTime'),
+    );
+  }
+
+  Widget _buildFanCard(BuildContext context, Unit unit) {
+    return ListTile(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => FanSettingPage(
+              unitId: unit.unitId,
+            ),
+          ),
+        );
+      },
+      leading: Padding(
+        padding: const EdgeInsets.only(right: 2),
+        child: ImageIcon(
+          AssetImage('assets/fan_icon.jpg'),
+          color: Colors.green[700],
+          size: 30,
+        ),
+      ),
+      title: Text('FAN', style: Theme.of(context).textTheme.headline6),
+      subtitle: _buildDayButtons(unit.fan),
+    );
+  }
+
+  Widget _buildLightingCard(BuildContext context, Unit unit) {
+    return ListTile(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => LightSettingPage(
+              unitId: unit.unitId,
+            ),
+          ),
+        );
+      },
+      leading: Padding(
+        padding: const EdgeInsets.only(right: 2),
+        child: ImageIcon(
+          AssetImage('assets/light_icon.jpg'),
+          color: Colors.green[700],
+          size: 30,
+        ),
+      ),
+      title: Text('AYDINLATMA', style: Theme.of(context).textTheme.headline6),
+      subtitle: _buildDayButtons(unit.lighting),
+    );
+  }
+
+  Widget _buildDayButtons(List<Timing> timings) {
+    double radius = 12;
+    List<String> _weekDays = ['Pt', 'S', 'Ç', 'P', 'C', 'Ct', 'P'];
     return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(title, style: Theme.of(context).textTheme.headline6),
-          Text(activeDays.join(', ')),
-          Text('Başlangıç: ${map['start_time']}'),
-          Text('Süre: ${map['duration']}'),
-        ],
+      height: 30,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: _weekDays.length,
+        itemBuilder: (context, index) => Padding(
+          padding: const EdgeInsets.all(2.0),
+          child: Container(
+            decoration: BoxDecoration(shape: BoxShape.circle, boxShadow: [
+              BoxShadow(
+                  blurRadius: 2,
+                  color: Colors.black45,
+                  offset: Offset(2, 2),
+                  spreadRadius: 1)
+            ]),
+            child: CircleAvatar(
+              radius: radius,
+              backgroundColor: timings[index].isActive
+                  ? Colors.lightGreen
+                  : Colors.redAccent,
+              child:
+                  Text(_weekDays[index], style: TextStyle(color: Colors.white)),
+            ),
+          ),
+        ),
       ),
     );
   }
