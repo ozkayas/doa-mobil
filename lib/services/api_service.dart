@@ -89,7 +89,7 @@ class ApiService {
   }
 
   Future<Client> getDataFromServer() async {
-    print("----- API : getDataFromServer");
+    print("----- API : getDataFromServer called");
     try {
       final response = await http
           .get(_apiGetUrl, headers: headersForGet)

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:doa_1_0/models/user_model.dart';
 import '../view_models/client_state_provider.dart';
 import 'package:provider/provider.dart';
@@ -12,6 +14,22 @@ class LandingPage extends StatefulWidget {
 }
 
 class _LandingPageState extends State<LandingPage> {
+  Timer timer;
+  @override
+  void initState() {
+    super.initState();
+    timer = Timer.periodic(Duration(seconds: 60), (Timer t) {
+      print("Timer triggered");
+      Provider.of<ClientState>(context, listen: false).getClientDataFromApi();
+    });
+  }
+
+  @override
+  void dispose() {
+    timer.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     /*final Future<bool> _future =

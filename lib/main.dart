@@ -1,3 +1,5 @@
+import 'package:cron/cron.dart';
+import 'package:doa_1_0/services/api_service.dart';
 import 'package:doa_1_0/services/constants.dart';
 import 'package:doa_1_0/view_models/client_state_provider.dart';
 import 'package:doa_1_0/views/device_page.dart';
@@ -13,6 +15,16 @@ import 'views/splash_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+
+  //Initialize ApiService singleton
+  ApiService apiService = ApiService.instance;
+
+/*  //Setting crone to fetch data from API every minute
+  final cron = Cron();
+  cron.schedule(Schedule.parse('* * * * *'), () async {
+    print('====== > pring smt. every minutes');
+    //await apiService.getDataFromServer();
+  });*/
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((value) => runApp(MyApp()));
 }

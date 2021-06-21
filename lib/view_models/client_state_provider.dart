@@ -50,9 +50,11 @@ class ClientState with ChangeNotifier {
 
   /// API Servisinden Tüm Müşteri + Cihaz bilgisini isteyen metot
   Future<bool> getClientDataFromApi() async {
+    print("---- CLIENT STATE: getClientDataFromApi called");
     try {
       var _apiService = ApiService.instance;
       _clientData = await _apiService.getDataFromServer();
+      print("----- _clinetData yenilendi");
       //notifyListeners();
       return true;
     } catch (e) {
