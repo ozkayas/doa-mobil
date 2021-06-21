@@ -17,14 +17,25 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  Timer timer;
   bool isLoading;
   final TextStyle _infoTextStyle =
       TextStyle(fontSize: 20, color: Colors.black54);
 
   @override
   void initState() {
-    isLoading = false;
     super.initState();
+    isLoading = false;
+    timer = Timer.periodic(Duration(seconds: 60), (Timer t) {
+      print("Timer triggered");
+      Provider.of<ClientState>(context, listen: false).getClientDataFromApi();
+    });
+  }
+
+  @override
+  void dispose() {
+    timer.cancel();
+    super.dispose();
   }
 
   @override

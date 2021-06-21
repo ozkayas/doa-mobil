@@ -14,27 +14,8 @@ class LandingPage extends StatefulWidget {
 }
 
 class _LandingPageState extends State<LandingPage> {
-  Timer timer;
-  @override
-  void initState() {
-    super.initState();
-    timer = Timer.periodic(Duration(seconds: 60), (Timer t) {
-      print("Timer triggered");
-      Provider.of<ClientState>(context, listen: false).getClientDataFromApi();
-    });
-  }
-
-  @override
-  void dispose() {
-    timer.cancel();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
-    /*final Future<bool> _future =
-        Provider.of<ClientState>(context, listen: false)
-            .getLoginStatusFromDevice();*/
     final Future<User> _future =
         Provider.of<ClientState>(context, listen: false)
             .getUserStatusFromDevice();
