@@ -15,16 +15,6 @@ import 'views/splash_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-
-  //Initialize ApiService singleton
-  ApiService apiService = ApiService.instance;
-
-/*  //Setting crone to fetch data from API every minute
-  final cron = Cron();
-  cron.schedule(Schedule.parse('* * * * *'), () async {
-    print('====== > pring smt. every minutes');
-    //await apiService.getDataFromServer();
-  });*/
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((value) => runApp(MyApp()));
 }
@@ -36,6 +26,7 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider<ClientState>(
       create: (context) => ClientState(),
       child: MaterialApp(
+          debugShowCheckedModeBanner: false,
           title: 'DOA',
           theme: ThemeData(
             buttonColor: Constants.mainGreen,

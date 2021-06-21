@@ -26,8 +26,8 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     isLoading = false;
-    timer = Timer.periodic(Duration(seconds: 60), (Timer t) {
-      print("Timer triggered");
+    timer = Timer.periodic(Duration(seconds: 10), (Timer t) {
+      //print("Timer triggered");
       Provider.of<ClientState>(context, listen: false).getClientDataFromApi();
     });
   }
@@ -44,6 +44,7 @@ class _HomePageState extends State<HomePage> {
 
     return Consumer<ClientState>(
       builder: (BuildContext context, _clientState, Widget child) {
+        print("HomePage Consumer build etti");
         return Scaffold(
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerFloat,

@@ -56,6 +56,9 @@ class ClientState with ChangeNotifier {
       _clientData = await _apiService.getDataFromServer();
       print("----- _clinetData yenilendi");
       //notifyListeners();
+      ///TODO: HomePage içindeki Consumer + FutureBuilder sürekli tetiklemesini kapatmak gerekiyor
+      ///ve notifyListenersı aktif etmek.
+
       return true;
     } catch (e) {
       rethrow;
