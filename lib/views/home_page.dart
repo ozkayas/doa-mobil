@@ -18,6 +18,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   Timer timer;
+  Future _future;
   bool isLoading;
   final TextStyle _infoTextStyle =
       TextStyle(fontSize: 20, color: Colors.black54);
@@ -26,10 +27,16 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     isLoading = false;
-    timer = Timer.periodic(Duration(seconds: 10), (Timer t) {
+    timer = Timer.periodic(Duration(seconds: 10000), (Timer t) {
       //print("Timer triggered");
       Provider.of<ClientState>(context, listen: false).getClientDataFromApi();
     });
+  }
+
+  @override
+  void didChangeDependencies() {
+    _future = Provider.of<ClientState>(context).getClientDataFromApi();
+    super.didChangeDependencies();
   }
 
   @override
@@ -42,79 +49,75 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final double _imageWidth = MediaQuery.of(context).size.width * 0.5;
 
-    return Consumer<ClientState>(
-      builder: (BuildContext context, _clientState, Widget child) {
-        print("HomePage Consumer build etti");
-        return Scaffold(
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerFloat,
-          appBar: _buildAppBar(context),
-          body: FutureBuilder<bool>(
-            future: _clientState.getClientDataFromApi(),
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              if (snapshot.hasError) {
-                return Center(
-                    child: Text(
-                        'Bir Hata Oluştu, Lütfen Uygulamayı Tekrar Çalıştırın'));
-              }
-              if (snapshot.hasData) {
-                return Center(
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(15.0),
-                        child: Image.asset(
-                          'assets/logo_ver2.png',
-                          width: _imageWidth,
-                        ),
-                      ),
-                      Text(
-                        '${_clientState.locationName}',
-                        style: _infoTextStyle,
-                      ),
-                      SizedBox(height: 20.0),
-                      Expanded(
-                        child: ListView.builder(
-                          itemCount: _clientState.units.length,
-                          itemBuilder: (BuildContext context, int index) =>
-                              _buildCard2(
-                                  index: index,
-                                  unit: _clientState.units[index],
-                                  context: context),
-                          scrollDirection: Axis.vertical,
-                          shrinkWrap: true,
-                        ),
-                      ),
-                      //Spacer(),
-                    ],
+    return Scaffold(
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      appBar: _buildAppBar(context),
+      body: FutureBuilder<bool>(
+        //future: _clientState.getClientDataFromApi(),
+        future: _future,
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.hasError) {
+            return Center(
+                child: Text(
+                    'Bir Hata Oluştu, Lütfen Uygulamayı Tekrar Çalıştırın'));
+          }
+          if (snapshot.hasData) {
+            return Center(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Image.asset(
+                      'assets/logo_ver2.png',
+                      width: _imageWidth,
+                    ),
                   ),
-                );
-              } else {
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CircularProgressIndicator(),
-                      SizedBox(height: 30),
-                      Text('Lütfen Bekleyiniz'),
-                      Text('Cihaz Bilgileri Getiriliyor')
-                    ],
+                  Text(
+                    '${Provider.of<ClientState>(context).locationName}',
+                    style: _infoTextStyle,
                   ),
-                );
-              }
-            },
-          ),
-          floatingActionButton: FloatingActionButton(
-              backgroundColor: Constants.mainGreen,
-              onPressed: () async {
-                await context.read<ClientState>().getClientDataFromApi();
-              },
-              child: Icon(
-                Icons.refresh_rounded,
-                size: 34,
-              )),
-        );
-      },
+                  SizedBox(height: 20.0),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: Provider.of<ClientState>(context).units.length,
+                      itemBuilder: (BuildContext context, int index) =>
+                          _buildCard2(
+                              index: index,
+                              unit: Provider.of<ClientState>(context)
+                                  .units[index],
+                              context: context),
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                    ),
+                  ),
+                  //Spacer(),
+                ],
+              ),
+            );
+          } else {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(),
+                  SizedBox(height: 30),
+                  Text('Lütfen Bekleyiniz'),
+                  Text('Cihaz Bilgileri Getiriliyor')
+                ],
+              ),
+            );
+          }
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+          backgroundColor: Constants.mainGreen,
+          onPressed: () async {
+            await context.read<ClientState>().getClientDataFromApi();
+          },
+          child: Icon(
+            Icons.refresh_rounded,
+            size: 34,
+          )),
     );
   }
 
