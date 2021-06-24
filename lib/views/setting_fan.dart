@@ -74,7 +74,6 @@ class _FanSettingPageState extends State<FanSettingPage> {
             _tempUnit = clientState.units
                 .firstWhere((unit) => unit.unitId == widget.unitId);
             _tempFanSchedule = clientState.getFanSchedule(widget.unitId);
-            print("Consumer içindeki builder metodu çalışıyor");
             return Center(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -165,12 +164,9 @@ class _FanSettingPageState extends State<FanSettingPage> {
                             }
                             var response = await clientState.updateFanSchedule(
                                 _tempFanSchedule, _tempUnit);
-                            print(
-                                'viewmodeldan butona gelen response: $response');
+
                             if (response) {
-                              print('true döndü');
                             } else {
-                              print('kaydedilemedi ');
                               await showTimeOutAlertDialog(context);
                               Navigator.pop(context);
                             }

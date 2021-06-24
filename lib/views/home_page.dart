@@ -59,7 +59,6 @@ class _HomePageState extends State<HomePage> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       appBar: _buildAppBar(context),
       body: FutureBuilder<bool>(
-        //future: _clientState.getClientDataFromApi(),
         future: _future,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasError) {
@@ -152,6 +151,7 @@ class _HomePageState extends State<HomePage> {
     return ScaffoldMessenger.of(context)
         .showSnackBar(
           SnackBar(
+            //animation: Animation,
             backgroundColor: Constants.mainGreen.withOpacity(0.5),
             content: const Text(
               'Veriler Güncelleniyor',
@@ -263,9 +263,7 @@ class _HomePageState extends State<HomePage> {
                   Unit _unit =
                       await Provider.of<ClientState>(context, listen: false)
                           .getUnitDataFromApi(unitId: unit.unitId)
-                          .timeout(Duration(seconds: 500));
-
-                  ///TOdo: seconds:5 yapılacak,deneme amaçlı 500
+                          .timeout(Duration(seconds: 5));
 
                   Navigator.push(
                     context,

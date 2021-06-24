@@ -47,7 +47,6 @@ class _DevicePageState extends State<DevicePage> {
         await Provider.of<ClientState>(context, listen: false)
             .getClientDataFromApi();
         Navigator.pop(context);
-        //return Future.value(false);
         return false;
       },
       child: Scaffold(

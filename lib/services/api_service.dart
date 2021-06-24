@@ -13,7 +13,6 @@ class ApiService {
   /// Singleton obje yaratıyoruz
   ApiService._singleton();
   static final ApiService instance = ApiService._singleton();
-
   final String _apiTokenUrl = 'https://doa.ohmenerji.com.tr/token';
   final String _apiGetUrl = 'https://doa.ohmenerji.com.tr/api/units';
   final String _apiToggleUrl = 'https://doa.ohmenerji.com.tr/api/units/toggle';
@@ -151,7 +150,7 @@ class ApiService {
   }
 
   Future<bool> postUnitData({Map unitAsMap}) async {
-    print("---- APİ : postUnitData");
+    print("---- API : postUnitData");
     try {
       final response = await http
           .post(_apiPostUnitSettings,
