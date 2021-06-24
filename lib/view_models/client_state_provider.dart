@@ -11,6 +11,9 @@ class ClientState with ChangeNotifier {
   /// Tüm ana veriyi tutan model sınıf --> client_model.dart dosyasında
   Client _clientData;
 
+  ///StreamBuilder için stream Controller
+  StreamController<Client> postsController = StreamController();
+
   /// Kullanıcının anlık token, username ve giriş bilgileri
   /// Bu veri sharedPref'te saklanmalı ve LandingPage yüklenirken okunmalı
   User _user;
@@ -56,6 +59,7 @@ class ClientState with ChangeNotifier {
       _clientData = await _apiService.getDataFromServer();
       print("----- _clinetData yenilendi");
       //notifyListeners();
+      postsController.add(_clientData);
 
       ///TODO: HomePage içindeki Consumer + FutureBuilder sürekli tetiklemesini kapatmak gerekiyor
       ///ve notifyListenersı aktif etmek.

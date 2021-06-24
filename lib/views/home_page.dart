@@ -17,9 +17,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  bool showFAB = true;
+  bool _isSnackbarActive = false;
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   Timer timer;
   Future _future;
-  bool isLoading;
+  bool isLoading = false;
   final TextStyle _infoTextStyle =
       TextStyle(fontSize: 20, color: Colors.black54);
 
@@ -35,7 +38,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void didChangeDependencies() {
-    _future = Provider.of<ClientState>(context).getClientDataFromApi();
+    _future =
+        Provider.of<ClientState>(context, listen: false).getClientDataFromApi();
     super.didChangeDependencies();
   }
 
@@ -50,7 +54,8 @@ class _HomePageState extends State<HomePage> {
     final double _imageWidth = MediaQuery.of(context).size.width * 0.5;
 
     return Scaffold(
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      key: scaffoldKey,
+      //floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       appBar: _buildAppBar(context),
       body: FutureBuilder<bool>(
         //future: _clientState.getClientDataFromApi(),
@@ -78,17 +83,30 @@ class _HomePageState extends State<HomePage> {
                   ),
                   SizedBox(height: 20.0),
                   Expanded(
-                    child: ListView.builder(
-                      itemCount: Provider.of<ClientState>(context).units.length,
-                      itemBuilder: (BuildContext context, int index) =>
-                          _buildCard2(
-                              index: index,
-                              unit: Provider.of<ClientState>(context)
-                                  .units[index],
-                              context: context),
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                    ),
+                    child: StreamBuilder<Client>(
+                        stream: Provider.of<ClientState>(context)
+                            .postsController
+                            .stream,
+                        builder: (context, snapshot) {
+                          return (snapshot.hasError)
+                              ? Center(
+                                  child: Text(
+                                      "Bir Hata Oluştu, Lütfen daha sonra tekrar deneyiniz"),
+                                )
+                              : (!snapshot.hasData)
+                                  ? Center(child: CircularProgressIndicator())
+                                  : ListView.builder(
+                                      itemCount: snapshot.data.units.length,
+                                      itemBuilder: (BuildContext context,
+                                              int index) =>
+                                          _buildCard2(
+                                              index: index,
+                                              unit: snapshot.data.units[index],
+                                              context: context),
+                                      scrollDirection: Axis.vertical,
+                                      shrinkWrap: true,
+                                    );
+                        }),
                   ),
                   //Spacer(),
                 ],
@@ -109,16 +127,42 @@ class _HomePageState extends State<HomePage> {
           }
         },
       ),
-      floatingActionButton: FloatingActionButton(
-          backgroundColor: Constants.mainGreen,
-          onPressed: () async {
-            await context.read<ClientState>().getClientDataFromApi();
-          },
-          child: Icon(
-            Icons.refresh_rounded,
-            size: 34,
-          )),
+      floatingActionButton: showFAB
+          ? FloatingActionButton(
+              backgroundColor: Constants.mainGreen,
+              onPressed: () async {
+                await context.read<ClientState>().getClientDataFromApi();
+                if (!_isSnackbarActive) {
+                  showSnack();
+                }
+              },
+              child: Icon(
+                Icons.refresh_rounded,
+                size: 34,
+              ))
+          : null,
     );
+  }
+
+  showSnack() {
+    setState(() {
+      _isSnackbarActive = true;
+    });
+    return ScaffoldMessenger.of(context)
+        .showSnackBar(
+          SnackBar(
+            backgroundColor: Constants.mainGreen.withOpacity(0.5),
+            content: const Text('Veriler Güncelleniyor'),
+            //behavior: SnackBarBehavior.floating,
+          ),
+        )
+        .closed
+        .then((SnackBarClosedReason reason) {
+      // snackbar is now closed.
+      setState(() {
+        _isSnackbarActive = false;
+      });
+    });
   }
 
   Widget _buildAppBar(BuildContext context) {
@@ -208,14 +252,16 @@ class _HomePageState extends State<HomePage> {
         onTap: isLoading
             ? null
             : () async {
-                setState(() {
-                  isLoading = false;
-                });
+                /*setState(() {
+                  isLoading = true;
+                });*/
                 try {
                   Unit _unit =
                       await Provider.of<ClientState>(context, listen: false)
                           .getUnitDataFromApi(unitId: unit.unitId)
-                          .timeout(Duration(seconds: 5));
+                          .timeout(Duration(seconds: 500));
+
+                  ///TOdo: seconds:5 yapılacak,deneme amaçlı 500
 
                   Navigator.push(
                     context,
@@ -229,9 +275,9 @@ class _HomePageState extends State<HomePage> {
                     ),
                   );
                 } on TimeoutException catch (e) {
-                  setState(() {
-                    isLoading = true;
-                  });
+                  /*   setState(() {
+                    isLoading = false;
+                  });*/
                 }
               },
         child: Card(
