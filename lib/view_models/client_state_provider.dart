@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:core';
+import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/client_model.dart';
 import '../models/user_model.dart';
@@ -12,7 +13,7 @@ class ClientState with ChangeNotifier {
   Client _clientData;
 
   ///StreamBuilder için stream Controller
-  StreamController<Client> postsController = StreamController();
+  BehaviorSubject<Client> postsController = BehaviorSubject();
 
   /// Kullanıcının anlık token, username ve giriş bilgileri
   /// Bu veri sharedPref'te saklanmalı ve LandingPage yüklenirken okunmalı
@@ -57,8 +58,7 @@ class ClientState with ChangeNotifier {
     try {
       var _apiService = ApiService.instance;
       _clientData = await _apiService.getDataFromServer();
-      print("----- _clinetData yenilendi");
-      //notifyListeners();
+      print("----- _clientData yenilendi");
       postsController.add(_clientData);
 
       ///TODO: HomePage içindeki Consumer + FutureBuilder sürekli tetiklemesini kapatmak gerekiyor
@@ -233,6 +233,7 @@ class ClientState with ChangeNotifier {
     var _apiService = ApiService.instance;
     var result = await _apiService.toggle(
         toggleStatus: bool, toggleType: toggleType, unitId: unitId);
+    await getClientDataFromApi();
     return result;
   }
 }

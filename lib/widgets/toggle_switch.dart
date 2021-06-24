@@ -28,13 +28,9 @@ class _ToggleSwitchState extends State<ToggleSwitch> {
   bool _isLoading = false;
 
   @override
-  void initState() {
-    status = widget.status;
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    print("Toggle Rebuilded");
+    status = widget.status;
     return _isLoading
         ? Center(child: CircularProgressIndicator())
         : Switch(

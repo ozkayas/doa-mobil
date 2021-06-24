@@ -33,7 +33,6 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     isLoading = false;
     timer = Timer.periodic(Duration(seconds: 60), (Timer t) {
-      //print("Timer triggered");
       Provider.of<ClientState>(context, listen: false).getClientDataFromApi();
     });
   }
