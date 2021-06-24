@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:doa_1_0/models/client_model.dart';
 import 'package:doa_1_0/services/constants.dart';
@@ -30,7 +31,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     isLoading = false;
-    timer = Timer.periodic(Duration(seconds: 10000), (Timer t) {
+    timer = Timer.periodic(Duration(seconds: 60), (Timer t) {
       //print("Timer triggered");
       Provider.of<ClientState>(context, listen: false).getClientDataFromApi();
     });
@@ -55,7 +56,7 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       key: scaffoldKey,
-      //floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       appBar: _buildAppBar(context),
       body: FutureBuilder<bool>(
         //future: _clientState.getClientDataFromApi(),
@@ -127,7 +128,7 @@ class _HomePageState extends State<HomePage> {
           }
         },
       ),
-      floatingActionButton: showFAB
+      floatingActionButton: !_isSnackbarActive
           ? FloatingActionButton(
               backgroundColor: Constants.mainGreen,
               onPressed: () async {
@@ -152,7 +153,10 @@ class _HomePageState extends State<HomePage> {
         .showSnackBar(
           SnackBar(
             backgroundColor: Constants.mainGreen.withOpacity(0.5),
-            content: const Text('Veriler Güncelleniyor'),
+            content: const Text(
+              'Veriler Güncelleniyor',
+              textAlign: TextAlign.center,
+            ),
             //behavior: SnackBarBehavior.floating,
           ),
         )
