@@ -5,6 +5,7 @@ import 'package:doa_1_0/models/client_model.dart';
 import 'package:doa_1_0/services/constants.dart';
 import 'package:doa_1_0/view_models/client_state_provider.dart';
 import 'package:doa_1_0/views/device_page.dart';
+import 'package:doa_1_0/views/device_page_streambuilder.dart';
 import 'package:doa_1_0/views/landing_page.dart';
 import 'package:doa_1_0/widgets/alert_dialogs.dart';
 import 'package:flutter/material.dart';
@@ -197,7 +198,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildCard({Unit unit, int index, BuildContext context}) {
+  /*Widget _buildCard({Unit unit, int index, BuildContext context}) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(30, 0, 30, 2),
       child: GestureDetector(
@@ -247,7 +248,7 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
-  }
+  }*/
 
   Widget _buildCard2({Unit unit, int index, BuildContext context}) {
     return Padding(
@@ -268,11 +269,8 @@ class _HomePageState extends State<HomePage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => DevicePage(
+                      builder: (context) => DevicePageStream(
                         unitId: unit.unitId,
-                        wateringOn: _unit.wateringOn,
-                        fanOn: _unit.fanOn,
-                        lightingOn: _unit.lightingOn,
                       ),
                     ),
                   );
