@@ -72,7 +72,7 @@ class _DevicePageStreamState extends State<DevicePageStream> {
                       padding: const EdgeInsets.fromLTRB(0, 30, 12, 0),
                       child: Column(
                         children: [
-                          _buildLogo(_imageWidth),
+                          //_buildLogo(_imageWidth),
                           SizedBox(
                             height: 10,
                           ),
@@ -137,9 +137,9 @@ class _DevicePageStreamState extends State<DevicePageStream> {
   Widget _buildDeviceSummary(Unit _unit, BuildContext context) {
     return Row(
       // Cihaz imajı ve sıcaklık bilgilerinin içeren Row
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        SizedBox(width: 80, child: Image.asset('assets/unit_image.png')),
+        SizedBox(width: 120, child: Image.asset('assets/doa_unit_1.png')),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -170,15 +170,10 @@ class _DevicePageStreamState extends State<DevicePageStream> {
 
   AppBar _buildAppBar(BuildContext context, Unit _unit) {
     return AppBar(
-      /*   leading: IconButton(
-        icon: Icon(Icons.arrow_back, color: Colors.white),
-        onPressed: () {
-          Navigator.pop(context);
-        },
-      ),*/
+      centerTitle: true,
       backgroundColor: Constants.mainGreen,
-      title: Text('Ünite ${_unit.unitId} Durum',
-          style: TextStyle(color: Colors.white)),
+      title:
+          Text('Ünite ${_unit.unitId}', style: TextStyle(color: Colors.white)),
     );
   }
 

@@ -120,7 +120,7 @@ class _DevicePageState extends State<DevicePage> {
       // Cihaz imajı ve sıcaklık bilgilerinin içeren Row
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        SizedBox(width: 80, child: Image.asset('assets/unit_image.png')),
+        SizedBox(width: 80, child: Image.asset('assets/doa_unit_1.png')),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

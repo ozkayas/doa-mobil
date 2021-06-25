@@ -99,7 +99,7 @@ class _HomePageState extends State<HomePage> {
                                       itemCount: snapshot.data.units.length,
                                       itemBuilder: (BuildContext context,
                                               int index) =>
-                                          _buildCard2(
+                                          _buildCard(
                                               index: index,
                                               unit: snapshot.data.units[index],
                                               context: context),
@@ -131,9 +131,9 @@ class _HomePageState extends State<HomePage> {
           ? FloatingActionButton(
               backgroundColor: Constants.mainGreen,
               onPressed: () async {
-                await context.read<ClientState>().getClientDataFromApi();
                 if (!_isSnackbarActive) {
                   showSnack();
+                  await context.read<ClientState>().getClientDataFromApi();
                 }
               },
               child: Icon(
@@ -197,59 +197,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  /*Widget _buildCard({Unit unit, int index, BuildContext context}) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(30, 0, 30, 2),
-      child: GestureDetector(
-        onTap: isLoading
-            ? null
-            : () async {
-                setState(() {
-                  isLoading = false;
-                });
-                try {
-                  Unit _unit =
-                      await Provider.of<ClientState>(context, listen: false)
-                          .getUnitDataFromApi(unitId: unit.unitId)
-                          .timeout(Duration(seconds: 5));
-
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => DevicePage(
-                        unitId: unit.unitId,
-                        wateringOn: _unit.wateringOn,
-                        fanOn: _unit.fanOn,
-                        lightingOn: _unit.lightingOn,
-                      ),
-                    ),
-                  );
-                } on TimeoutException catch (e) {
-                  setState(() {
-                    isLoading = true;
-                  });
-                }
-              },
-        child: Card(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          color: unit.isActive ? Colors.green[50] : Colors.red[50],
-          child: ListTile(
-            leading: unit.isActive
-                ? Icon(Icons.wb_sunny, color: Colors.green)
-                : Icon(Icons.warning, color: Colors.red),
-            title: isLoading
-                ? Text('Ünite verisi okunuyor')
-                : Text('Ünite ${unit.unitId}'),
-            //subtitle: isActive ? Text('Aktif') : Text('Çalışmıyor'),
-          ),
-        ),
-      ),
-    );
-  }*/
-
-  Widget _buildCard2({Unit unit, int index, BuildContext context}) {
+  Widget _buildCard({Unit unit, int index, BuildContext context}) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(30, 0, 30, 2),
       child: GestureDetector(
