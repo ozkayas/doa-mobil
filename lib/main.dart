@@ -1,6 +1,6 @@
 import 'package:doa_1_0/services/constants.dart';
 import 'package:doa_1_0/view_models/client_state_provider.dart';
-import 'package:doa_1_0/views/device_page.dart';
+import 'package:doa_1_0/views/device_page_streambuilder.dart';
 import 'package:doa_1_0/views/home_page.dart';
 import 'package:doa_1_0/views/landing_page.dart';
 import 'package:doa_1_0/views/setting_fan.dart';
@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
             '/': (context) => Splash(),
             HomePage.routeName: (context) => HomePage(),
             LandingPage.routeName: (context) => LandingPage(),
-            DevicePage.routeName: (context) => DevicePage(),
+            DevicePageStream.routeName: (context) => DevicePageStream(),
             FanSettingPage.routeName: (context) => FanSettingPage(),
             WaterSettingPage.routeName: (context) => WaterSettingPage(),
             LightSettingPage.routeName: (context) => LightSettingPage(),

@@ -36,8 +36,6 @@ class _DevicePageStreamState extends State<DevicePageStream> {
 
   @override
   Widget build(BuildContext context) {
-    final double _imageWidth = MediaQuery.of(context).size.width * 0.5;
-
     return WillPopScope(
       onWillPop: () async {
         await Provider.of<ClientState>(context, listen: false)
@@ -130,11 +128,14 @@ class _DevicePageStreamState extends State<DevicePageStream> {
   }
 
   Widget _buildDeviceSummary(Unit _unit, BuildContext context) {
+    final double _imageWidth = MediaQuery.of(context).size.width * 0.3;
+
     return Row(
       // Cihaz imajı ve sıcaklık bilgilerinin içeren Row
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        SizedBox(width: 120, child: Image.asset('assets/doa_unit_1.png')),
+        SizedBox(
+            width: _imageWidth, child: Image.asset('assets/doa_unit_1.png')),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

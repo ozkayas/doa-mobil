@@ -3,7 +3,6 @@ import 'package:doa_1_0/services/constants.dart';
 import 'package:doa_1_0/view_models/client_state_provider.dart';
 import 'package:doa_1_0/widgets/alert_dialogs.dart';
 import 'package:email_validator/email_validator.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:provider/provider.dart';
 import './home_page.dart';

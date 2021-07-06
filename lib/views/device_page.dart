@@ -1,3 +1,6 @@
+/*
+
+///TODO: Delete this file
 import 'package:doa_1_0/models/client_model.dart';
 import 'package:doa_1_0/services/calculator.dart';
 import 'package:doa_1_0/services/constants.dart';
@@ -151,12 +154,14 @@ class _DevicePageState extends State<DevicePage> {
 
   AppBar _buildAppBar(BuildContext context, Unit _unit) {
     return AppBar(
-      /*   leading: IconButton(
+      */
+/*   leading: IconButton(
         icon: Icon(Icons.arrow_back, color: Colors.white),
         onPressed: () {
           Navigator.pop(context);
         },
-      ),*/
+      ),*/ /*
+
       backgroundColor: Constants.mainGreen,
       title: Text('Ünite ${_unit.unitId} Durum',
           style: TextStyle(color: Colors.white)),
@@ -268,3 +273,4 @@ class _DevicePageState extends State<DevicePage> {
     );
   }
 }
+*/

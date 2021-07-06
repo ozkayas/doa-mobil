@@ -4,7 +4,6 @@ import 'dart:ui';
 import 'package:doa_1_0/models/client_model.dart';
 import 'package:doa_1_0/services/constants.dart';
 import 'package:doa_1_0/view_models/client_state_provider.dart';
-import 'package:doa_1_0/views/device_page.dart';
 import 'package:doa_1_0/views/device_page_streambuilder.dart';
 import 'package:doa_1_0/views/landing_page.dart';
 import 'package:doa_1_0/widgets/alert_dialogs.dart';
@@ -203,30 +202,36 @@ class _HomePageState extends State<HomePage> {
       child: GestureDetector(
         onTap: isLoading
             ? null
-            : () async {
-                /*setState(() {
+            : !unit.isActive
+                ? () async {
+                    var response = await showDisconnectedUnitDialog(context);
+                    print("tıklandı");
+                  }
+                : () async {
+                    /*setState(() {
                   isLoading = true;
                 });*/
-                try {
-                  Unit _unit =
+                    try {
+/*                  Unit _unit =
                       await Provider.of<ClientState>(context, listen: false)
                           .getUnitDataFromApi(unitId: unit.unitId)
-                          .timeout(Duration(seconds: 5));
+                          .timeout(Duration(seconds: 5));*/
 
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => DevicePageStream(
-                        unitId: unit.unitId,
-                      ),
-                    ),
-                  );
-                } on TimeoutException catch (e) {
-                  /*   setState(() {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DevicePageStream(
+                            unitId: unit.unitId,
+                          ),
+                        ),
+                      );
+                    } on TimeoutException catch (e) {
+                      print(e);
+                      /*   setState(() {
                     isLoading = false;
                   });*/
-                }
-              },
+                    }
+                  },
         child: Card(
           elevation: unit.isActive ? 3 : 0,
           shape: RoundedRectangleBorder(
