@@ -58,11 +58,20 @@ class ClientState with ChangeNotifier {
     try {
       var _apiService = ApiService.instance;
       _clientData = await _apiService.getDataFromServer();
-      print("----- _clientData yenilendi");
-      postsController.add(_clientData);
+/*      print("----- _clientData yenilendi");
+      print("Gelen");
 
-      ///TODO: HomePage içindeki Consumer + FutureBuilder sürekli tetiklemesini kapatmak gerekiyor
-      ///ve notifyListenersı aktif etmek.
+      /// Fan listesini sırala
+      _clientData.units.forEach((unit) {
+        unit.fan.sort((a, b) => a.day - b.day);
+      });
+
+      _clientData.units.firstWhere((unit) => unit.unitId == 2).fan.forEach((e) {
+        print(e.day);
+      });*/
+
+      ///Stream'e veri ekleniyor, Streambuilder widgetlar okuyor
+      postsController.add(_clientData);
 
       return true;
     } catch (e) {
@@ -99,6 +108,11 @@ class ClientState with ChangeNotifier {
       List<List<int>> fanSchedule, Unit unitToUpdate) async {
     //Argüman olarak gelen fanSchedule & unitToUpdate birleştir, tek bir unit olacak şekilde
     //Seçilen saatleri unit objesindeki Timinglere doldur:
+
+/*    unitToUpdate.fan.sort((a, b) {
+      return a.day - b.day;
+    });*/
+
     for (int i = 0; i < 7; i++) {
       unitToUpdate.fan[i].startTimeA = fanSchedule[i][0];
       unitToUpdate.fan[i].endTimeA = fanSchedule[i][1];
@@ -109,6 +123,10 @@ class ClientState with ChangeNotifier {
       //unitToUpdate.fan[i].endTimeC = fanSchedule[i][5];
     }
     //Birleştirilmiş, updated Unit objesini Map'e çevir
+/*    unitToUpdate.fan.sort((a, b) {
+      return a.day - b.day;
+    });*/
+
     try {
       var unitAsMap = unitToUpdate.toMap();
       bool response =
@@ -194,6 +212,11 @@ class ClientState with ChangeNotifier {
   List<List<int>> getFanSchedule(int unitId) {
     Unit _unit =
         _clientData.units.firstWhere((element) => element.unitId == unitId);
+    // Günlere göre sıralanıyor.
+    _unit.fan.sort((a, b) {
+      return a.day - b.day;
+    });
+
     return _unit.fan
         .map((e) => [
               e.startTimeA,
@@ -209,6 +232,11 @@ class ClientState with ChangeNotifier {
   List<List<int>> getLightSchedule(int unitId) {
     Unit _unit =
         _clientData.units.firstWhere((element) => element.unitId == unitId);
+    // Return etmeden önce günlere göre sıralama yapmak gerekiyor
+    _unit.lighting.sort((a, b) {
+      return a.day - b.day;
+    });
+    // Günlere göre sıralanmış listeden pencereler List<int> dolduruluyor.
     return _unit.lighting
         .map((e) => [
               e.startTimeA,

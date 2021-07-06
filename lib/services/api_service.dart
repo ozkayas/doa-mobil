@@ -94,6 +94,8 @@ class ApiService {
           .get(_apiGetUrl, headers: headersForGet)
           .timeout(Duration(seconds: 15));
       if (response.statusCode == 200) {
+        /*print(" ============= SERVERDAN GELEN JSON");
+        print(jsonDecode(response.body)['units'][1]['fan']);*/
         var clientData = Client.fromJson(jsonDecode(response.body));
         return clientData;
       } else {
@@ -150,7 +152,9 @@ class ApiService {
   }
 
   Future<bool> postUnitData({Map unitAsMap}) async {
-    print("---- API : postUnitData");
+    //print("---- API : postUnitData");
+    /*print(" ============= SERVERA GÖNDERİLEN JSON");
+    print(unitAsMap['fan']);*/
     try {
       final response = await http
           .post(_apiPostUnitSettings,

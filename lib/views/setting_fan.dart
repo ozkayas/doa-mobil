@@ -42,9 +42,6 @@ class _FanSettingPageState extends State<FanSettingPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    /*_tempUnit = Provider.of<ClientState>(context)
-        .units
-        .firstWhere((unit) => unit.unitId == widget.unitId);*/
   }
 
   @override
@@ -69,11 +66,21 @@ class _FanSettingPageState extends State<FanSettingPage> {
         opacity: 0.5,
         child: Consumer<ClientState>(
           builder: (context, clientState, child) {
-            /// ClientState'ten veriler çekiliyor, build öncesi.try
-            /// NotifyListeners olursa bunlar baştan çekilip, rebuild olacak
             _tempUnit = clientState.units
                 .firstWhere((unit) => unit.unitId == widget.unitId);
-            _tempFanSchedule = clientState.getFanSchedule(widget.unitId);
+            _tempUnit.fan.sort((a, b) => a.day - b.day);
+            _tempFanSchedule = _tempUnit.fan
+                .map((e) => [
+                      e.startTimeA,
+                      e.endTimeA,
+                      e.startTimeB,
+                      e.endTimeB,
+                      e.startTimeC,
+                      e.endTimeC
+                    ])
+                .toList();
+            //print(_tempFanSchedule);
+            //_tempFanSchedule = clientState.getFanSchedule(widget.unitId);
             return Center(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
