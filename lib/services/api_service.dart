@@ -13,10 +13,6 @@ class ApiService {
   /// Singleton obje yaratıyoruz
   ApiService._singleton();
   static final ApiService instance = ApiService._singleton();
-  final String _apiTokenUrl = 'https://doa.ohmenerji.com.tr/token';
-  final String _apiGetUrl = 'https://doa.ohmenerji.com.tr/api/units';
-  final String _apiToggleUrl = 'https://doa.ohmenerji.com.tr/api/units/toggle';
-  final String _apiPostUnitSettings = 'https://doa.ohmenerji.com.tr/api/units';
 
   /// Cihaz açılışında SharedPref'ten datalar çekilirken bu verilerin de yüklenmesi gerekiyor.
   ///
@@ -54,7 +50,7 @@ class ApiService {
       "password": pass
     };
     final response = await http
-        .post(_apiTokenUrl, headers: headersForToken, body: bodyMap)
+        .post(Constants.apiTokenUrl, headers: headersForToken, body: bodyMap)
         .timeout(Duration(seconds: 10));
     if (response.statusCode == 200) {
       _userName = jsonDecode(response.body)['userName'];
@@ -91,7 +87,7 @@ class ApiService {
     //print("----- API : getDataFromServer called");
     try {
       final response = await http
-          .get(_apiGetUrl, headers: headersForGet)
+          .get(Constants.apiGetUrl, headers: headersForGet)
           .timeout(Duration(seconds: 15));
       if (response.statusCode == 200) {
 /*        print(" ============= SERVERDAN GELEN JSON");
@@ -111,7 +107,7 @@ class ApiService {
   /// Eğer işlem API'dan success olarak dönerse true döndürecek, aksi halde false
   Future<bool> toggle({int unitId, int toggleType, bool toggleStatus}) async {
     //body: objesi dışarı alınabilir mi diye düşündüm ama sanırım gerek yok.
-    final response = await http.post(_apiToggleUrl,
+    final response = await http.post(Constants.apiToggleUrl,
         headers: headersForGet,
         body: jsonEncode(
             {"UnitId": unitId, "Type": toggleType, "Value": toggleStatus}));
@@ -131,8 +127,8 @@ class ApiService {
   Future<Map<String, dynamic>> getShortUnitDataFromServer({int unitId}) async {
     print("---- APİ : getShortUnitDataFromServer");
 
-    final response =
-        await http.get('$_apiGetUrl/$unitId', headers: headersForGet);
+    final response = await http.get('${Constants.apiGetUrl}/$unitId',
+        headers: headersForGet);
 
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response,
@@ -154,7 +150,7 @@ class ApiService {
     print(unitAsMap['lighting']);*/
     try {
       final response = await http
-          .post(_apiPostUnitSettings,
+          .post(Constants.apiPostUnitSettings,
               headers: headersForGet, body: jsonEncode(unitAsMap))
           .timeout(Duration(seconds: 5));
       if (jsonDecode(response.body)['Status'] == '1') {
