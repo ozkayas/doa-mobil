@@ -14,7 +14,6 @@ const List<String> _days = ['Pt', 'S', 'Ç', 'P', 'C', 'Ct', 'P'];
 
 class LightSettingPage extends StatefulWidget {
   static String routeName = '/settingsLightPage';
-
   final int unitId;
   LightSettingPage({this.unitId});
 
@@ -23,12 +22,16 @@ class LightSettingPage extends StatefulWidget {
 }
 
 class _LightSettingPageState extends State<LightSettingPage> {
-  bool _isLoading = false; // Takvimi kaydet butonuna basılınca loading için
+  bool _isLoading = false; // LoadingOverlay default value
   Unit _tempUnit;
+  List<List<int>> _tempLightSchedule;
 
-  /// Bu metot başka şekilde düşünülecek veya logic içerisine taşınacak!!!
   void _toggleIsActive(int dayNo, bool value) {
     _tempUnit.lighting[dayNo].isActive = value;
+  }
+
+  void _updateTempLightSchedule(List<List<int>> lightSchedule) {
+    _tempLightSchedule = lightSchedule;
   }
 
   @override
@@ -53,12 +56,22 @@ class _LightSettingPageState extends State<LightSettingPage> {
         opacity: 0.5,
         child: Consumer<ClientState>(
           builder: (context, clientState, child) {
-            /// ClientState'ten veriler çekiliyor, build öncesi.try
-            /// NotifyListeners olursa bunlar baştan çekilip, rebuild olacak
             _tempUnit = clientState.units
                 .firstWhere((unit) => unit.unitId == widget.unitId);
-            List<List<int>> _tempLightSchedule =
-                clientState.getLightSchedule(widget.unitId);
+            //Günlere göre sırala
+            _tempUnit.lighting.sort((a, b) => a.day - b.day);
+            _tempLightSchedule = _tempUnit.lighting
+                .map((e) => [
+                      e.startTimeA,
+                      e.endTimeA,
+                      e.startTimeB,
+                      e.endTimeB,
+                      e.startTimeC,
+                      e.endTimeC
+                    ])
+                .toList();
+            /*List<List<int>> _tempLightSchedule =
+                clientState.getLightSchedule(widget.unitId);*/
 
             return Center(
               child: Column(
@@ -82,37 +95,44 @@ class _LightSettingPageState extends State<LightSettingPage> {
                       dayNo: 0,
                       unit: _tempUnit,
                       lightSchedule: _tempLightSchedule,
-                      toggleIsActive: _toggleIsActive),
+                      toggleIsActive: _toggleIsActive,
+                      updateTempLightSchedule: _updateTempLightSchedule),
                   ScheduleRow(
                       dayNo: 1,
                       unit: _tempUnit,
                       lightSchedule: _tempLightSchedule,
-                      toggleIsActive: _toggleIsActive),
+                      toggleIsActive: _toggleIsActive,
+                      updateTempLightSchedule: _updateTempLightSchedule),
                   ScheduleRow(
                       dayNo: 2,
                       unit: _tempUnit,
                       lightSchedule: _tempLightSchedule,
-                      toggleIsActive: _toggleIsActive),
+                      toggleIsActive: _toggleIsActive,
+                      updateTempLightSchedule: _updateTempLightSchedule),
                   ScheduleRow(
                       dayNo: 3,
                       unit: _tempUnit,
                       lightSchedule: _tempLightSchedule,
-                      toggleIsActive: _toggleIsActive),
+                      toggleIsActive: _toggleIsActive,
+                      updateTempLightSchedule: _updateTempLightSchedule),
                   ScheduleRow(
                       dayNo: 4,
                       unit: _tempUnit,
                       lightSchedule: _tempLightSchedule,
-                      toggleIsActive: _toggleIsActive),
+                      toggleIsActive: _toggleIsActive,
+                      updateTempLightSchedule: _updateTempLightSchedule),
                   ScheduleRow(
                       dayNo: 5,
                       unit: _tempUnit,
                       lightSchedule: _tempLightSchedule,
-                      toggleIsActive: _toggleIsActive),
+                      toggleIsActive: _toggleIsActive,
+                      updateTempLightSchedule: _updateTempLightSchedule),
                   ScheduleRow(
                       dayNo: 6,
                       unit: _tempUnit,
                       lightSchedule: _tempLightSchedule,
-                      toggleIsActive: _toggleIsActive),
+                      toggleIsActive: _toggleIsActive,
+                      updateTempLightSchedule: _updateTempLightSchedule),
                   SizedBox(height: 30),
                   ConstrainedBox(
                     constraints: BoxConstraints.tightFor(
@@ -137,12 +157,8 @@ class _LightSettingPageState extends State<LightSettingPage> {
                             var response =
                                 await clientState.updateLightSchedule(
                                     _tempLightSchedule, _tempUnit);
-                            print(
-                                'viewmodeldan butona gelen response: $response');
                             if (response) {
-                              print('true döndü');
                             } else {
-                              print('kaydedilemedi ');
                               await showTimeOutAlertDialog(context);
                               Navigator.pop(context);
                             }
@@ -171,7 +187,9 @@ class _LightSettingPageState extends State<LightSettingPage> {
 
 /// ScheduleRow kısmını StateFul Widget haline getiriyorum
 ///  int dayNo verisi alacak
-class ScheduleRow extends StatefulWidget {
+///
+/*///todo: Delete This implementation
+  class ScheduleRow extends StatefulWidget {
   final int dayNo;
   final Unit unit;
   final List lightSchedule;
@@ -282,6 +300,162 @@ class _ScheduleRowState extends State<ScheduleRow> {
                           Calculator.createIntFromTimeOfDay(_selectedTime);
                       setState(() {
                         _lightSchedule[dayNo][1] = minutes;
+                      });
+                    }
+                  },
+                  child: Container(
+                    child: Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: Text(
+                        localizations.formatTimeOfDay(
+                            Calculator.createTimeOfDayFromInt(
+                                _lightSchedule[dayNo][1]),
+                            alwaysUse24HourFormat: true),
+                        style: GoogleFonts.orbitron(
+                            fontSize: 16,
+                            color: isActive ? Colors.black : Colors.grey),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            width: 5,
+          ),
+          Switch(
+              activeColor: Colors.lightGreen,
+              value: isActive,
+              onChanged: (value) {
+                toggleIsActive(dayNo, value);
+                setState(() {
+                  isActive = !isActive;
+                });
+              })
+        ],
+      ),
+    );
+  }
+}*/
+class ScheduleRow extends StatefulWidget {
+  final int dayNo;
+  final Unit unit;
+  final List<List<int>>
+      lightSchedule; // [[450, 495, 900, 925, -1, -1], [720, 725, 900, 925, -1, -1], [720, 725, 900, 925, -1, -1], [720, 725, 900, 925, -1, -1], [720, 725, 900, 925, -1, -1], [720, 725, 900, 925, -1, -1], [720, 725, 900, 925, -1, -1]]
+  final Function toggleIsActive;
+  final Function updateTempLightSchedule;
+  const ScheduleRow(
+      {@required this.dayNo,
+      @required this.unit,
+      @required this.lightSchedule,
+      @required this.toggleIsActive,
+      @required this.updateTempLightSchedule});
+
+  @override
+  _ScheduleRowState createState() => _ScheduleRowState();
+}
+
+class _ScheduleRowState extends State<ScheduleRow> {
+  bool isActive = true;
+  Function toggleIsActive = () {};
+  Function updateTempLightSchedule = () {};
+  List<List<int>> _lightSchedule;
+
+  @override
+  void initState() {
+    isActive = widget.unit.lighting[widget.dayNo].isActive;
+    toggleIsActive = widget.toggleIsActive;
+    updateTempLightSchedule = widget.updateTempLightSchedule;
+    _lightSchedule = widget.lightSchedule;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final localizations = MaterialLocalizations.of(context);
+    final int dayNo = widget.dayNo;
+    final double _circleAvatarRadius = 20.0;
+
+    return FractionallySizedBox(
+      widthFactor: 0.8,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          CircleAvatar(
+            radius: _circleAvatarRadius,
+            backgroundColor: isActive ? Colors.lightGreen : Colors.redAccent,
+            child: Text(_days[dayNo],
+                style: TextStyle(color: Colors.white, fontSize: 20)),
+          ),
+          SizedBox(
+            width: 20,
+          ),
+          AbsorbPointer(
+            absorbing: !isActive,
+            child: Row(
+              children: [
+                GestureDetector(
+                  onTap: _lightSchedule[dayNo][0] < 0
+                      ? null
+                      : () async {
+                          var _selectedTime = await showTimePicker(
+                            context: context,
+                            initialTime: TimeOfDay(hour: 0, minute: 0),
+                            builder: (BuildContext context, Widget child) {
+                              return MediaQuery(
+                                data: MediaQuery.of(context)
+                                    .copyWith(alwaysUse24HourFormat: true),
+                                child: child,
+                              );
+                            },
+                          );
+                          if (_selectedTime != null) {
+                            int minutes = Calculator.createIntFromTimeOfDay(
+                                _selectedTime);
+                            setState(() {
+                              _lightSchedule[dayNo][0] = minutes;
+                              updateTempLightSchedule(_lightSchedule);
+                            });
+                          }
+                        },
+                  child: Container(
+                    child: Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: Text(
+                        localizations.formatTimeOfDay(
+                            Calculator.createTimeOfDayFromInt(
+                                _lightSchedule[dayNo][0]),
+                            alwaysUse24HourFormat: true),
+                        style: GoogleFonts.orbitron(
+                            fontSize: 16,
+                            color: isActive ? Colors.black : Colors.grey),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  child: Text('-'),
+                ),
+                GestureDetector(
+                  onTap: () async {
+                    var _selectedTime = await showTimePicker(
+                      context: context,
+                      initialTime: TimeOfDay(hour: 0, minute: 0),
+                      builder: (BuildContext context, Widget child) {
+                        return MediaQuery(
+                          data: MediaQuery.of(context)
+                              .copyWith(alwaysUse24HourFormat: true),
+                          child: child,
+                        );
+                      },
+                    );
+                    if (_selectedTime != null) {
+                      int minutes =
+                          Calculator.createIntFromTimeOfDay(_selectedTime);
+                      setState(() {
+                        _lightSchedule[dayNo][1] = minutes;
+                        updateTempLightSchedule(_lightSchedule);
                       });
                     }
                   },

@@ -88,14 +88,14 @@ class ApiService {
   }
 
   Future<Client> getDataFromServer() async {
-    print("----- API : getDataFromServer called");
+    //print("----- API : getDataFromServer called");
     try {
       final response = await http
           .get(_apiGetUrl, headers: headersForGet)
           .timeout(Duration(seconds: 15));
       if (response.statusCode == 200) {
-        /*print(" ============= SERVERDAN GELEN JSON");
-        print(jsonDecode(response.body)['units'][1]['fan']);*/
+/*        print(" ============= SERVERDAN GELEN JSON");
+        print(jsonDecode(response.body)['units'][1]['lighting']);*/
         var clientData = Client.fromJson(jsonDecode(response.body));
         return clientData;
       } else {
@@ -140,9 +140,6 @@ class ApiService {
       //return response
       Map<String, dynamic> unitData = jsonDecode(response.body);
 
-      //unitData['watering'] = [];
-      //unitData['fan'] = [];
-      //unitData['lighting'] = [];
       return unitData;
     } else {
       // If the server did not return a 200 OK response,
@@ -153,8 +150,8 @@ class ApiService {
 
   Future<bool> postUnitData({Map unitAsMap}) async {
     //print("---- API : postUnitData");
-    /*print(" ============= SERVERA GÖNDERİLEN JSON");
-    print(unitAsMap['fan']);*/
+/*    print(" ============= SERVERA GÖNDERİLEN JSON");
+    print(unitAsMap['lighting']);*/
     try {
       final response = await http
           .post(_apiPostUnitSettings,

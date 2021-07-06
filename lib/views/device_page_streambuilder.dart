@@ -19,7 +19,7 @@ class DevicePageStream extends StatefulWidget {
 }
 
 class _DevicePageStreamState extends State<DevicePageStream> {
-  Stream<Client> _stream;
+  //Stream<Client> _stream;
 
   @override
   void initState() {
@@ -37,11 +37,6 @@ class _DevicePageStreamState extends State<DevicePageStream> {
   @override
   Widget build(BuildContext context) {
     final double _imageWidth = MediaQuery.of(context).size.width * 0.5;
-
-    /* ///UnitId'ye göre bu sayfada kullanılacak unit bilgisi _clientState.units
-    Unit _unit = Provider.of<ClientState>(context)
-        .units
-        .firstWhere((element) => element.unitId == widget.unitId);*/
 
     return WillPopScope(
       onWillPop: () async {
@@ -160,13 +155,13 @@ class _DevicePageStreamState extends State<DevicePageStream> {
       ],
     );
   }
-
+/*
   Widget _buildLogo(double _imageWidth) {
     return Image.asset(
       'assets/logo_ver2.png',
       width: _imageWidth,
     );
-  }
+  }*/
 
   AppBar _buildAppBar(BuildContext context, Unit _unit) {
     return AppBar(

@@ -58,17 +58,7 @@ class ClientState with ChangeNotifier {
     try {
       var _apiService = ApiService.instance;
       _clientData = await _apiService.getDataFromServer();
-/*      print("----- _clientData yenilendi");
-      print("Gelen");
-
-      /// Fan listesini sırala
-      _clientData.units.forEach((unit) {
-        unit.fan.sort((a, b) => a.day - b.day);
-      });
-
-      _clientData.units.firstWhere((unit) => unit.unitId == 2).fan.forEach((e) {
-        print(e.day);
-      });*/
+      print("----- _clientData yenilendi");
 
       ///Stream'e veri ekleniyor, Streambuilder widgetlar okuyor
       postsController.add(_clientData);
@@ -122,10 +112,6 @@ class ClientState with ChangeNotifier {
       //unitToUpdate.fan[i].startTimeC = fanSchedule[i][4];
       //unitToUpdate.fan[i].endTimeC = fanSchedule[i][5];
     }
-    //Birleştirilmiş, updated Unit objesini Map'e çevir
-/*    unitToUpdate.fan.sort((a, b) {
-      return a.day - b.day;
-    });*/
 
     try {
       var unitAsMap = unitToUpdate.toMap();

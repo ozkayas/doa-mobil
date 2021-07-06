@@ -1,3 +1,5 @@
+///todo: Delete this file
+/*
 import 'dart:async';
 
 import 'package:doa_1_0/services/constants.dart';
@@ -42,9 +44,11 @@ class _FanSettingPageState extends State<FanSettingPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    /*_tempUnit = Provider.of<ClientState>(context)
+    */
+/*_tempUnit = Provider.of<ClientState>(context)
         .units
-        .firstWhere((unit) => unit.unitId == widget.unitId);*/
+        .firstWhere((unit) => unit.unitId == widget.unitId);*/ /*
+
   }
 
   @override
@@ -355,3 +359,4 @@ class _ScheduleRowState extends State<ScheduleRow> {
     );
   }
 }
+*/

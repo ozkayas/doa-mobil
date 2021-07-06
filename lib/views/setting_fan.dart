@@ -24,24 +24,16 @@ class FanSettingPage extends StatefulWidget {
 }
 
 class _FanSettingPageState extends State<FanSettingPage> {
-  bool _isLoading =
-      false; // Takvimi kaydet butonuna basılınca LoadingOverLay için
+  bool _isLoading = false; // LoadingOverlay default value
   Unit _tempUnit;
   List<List<int>> _tempFanSchedule;
 
-  /// Bu metot başka şekilde düşünülecek veya logic içerisine taşınacak!!!
   void _toggleIsActive(int dayNo, bool value) {
     _tempUnit.fan[dayNo].isActive = value;
   }
 
   void _updateTempFanSchedule(List<List<int>> fanSchedule) {
     _tempFanSchedule = fanSchedule;
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
   }
 
   @override
