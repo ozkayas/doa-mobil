@@ -1,5 +1,3 @@
-import 'package:cron/cron.dart';
-import 'package:doa_1_0/services/api_service.dart';
 import 'package:doa_1_0/services/constants.dart';
 import 'package:doa_1_0/view_models/client_state_provider.dart';
 import 'package:doa_1_0/views/device_page.dart';
@@ -15,6 +13,9 @@ import 'views/splash_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent, // transparent status bar
+  ));
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((value) => runApp(MyApp()));
 }
