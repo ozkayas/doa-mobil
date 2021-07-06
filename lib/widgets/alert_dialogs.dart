@@ -157,11 +157,12 @@ Future<void> showDisconnectedUnitDialog(BuildContext context) async {
       ),
       content: Text(
         '''Cihaz Bağlantı Sorunu
-            Lütfen servis ile iletişime geçiniz  !''',
+    Lütfen servis ile iletişime geçiniz  !''',
+        textAlign: TextAlign.center,
       ),
       actions: <Widget>[
         TextButton(
-          child: Text("OK", style: TextStyle(fontSize: 16)),
+          child: Text("TAMAM", style: TextStyle(fontSize: 16)),
           onPressed: () {
             Navigator.of(context).pop();
           },
