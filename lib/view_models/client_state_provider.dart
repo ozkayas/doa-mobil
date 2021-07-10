@@ -16,7 +16,7 @@ class ClientState with ChangeNotifier {
   BehaviorSubject<Client> postsController = BehaviorSubject();
 
   /// Kullanıcının anlık token, username ve giriş bilgileri
-  /// Bu veri sharedPref'te saklanmalı ve LandingPage yüklenirken okunmalı
+  /// Bu veri sharedPref'te saklaniyor ve LandingPage yuklenirken okunuyor
   User _user;
 
   Future<User> getUserStatusFromDevice() async {
@@ -240,7 +240,6 @@ class ClientState with ChangeNotifier {
     print('Provider içindeki _isLoggedIn: $bool yapıldı');
     _user.isLoggedIn = bool;
     saveUserStatusToDevice();
-    //TODO: notify listeners gerekir mi? Denemeli
   }
 
   Future<bool> toggleSwitch({bool bool, int toggleType, int unitId}) async {

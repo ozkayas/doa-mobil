@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "595795035487",
+    "project_id": "doa-mobil",
+    "storage_bucket": "doa-mobil.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:595795035487:android:98e436e00bf6f51b9f22ea",
+        "android_client_info": {
+          "package_name": "com.example.doa_1_0"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "595795035487-rblcjagp8bp6jonq1i4i0nti1ditqcp6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqpnz9O6bwXeC3FRhyibn2qSejeD9rsdw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "595795035487-rblcjagp8bp6jonq1i4i0nti1ditqcp6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
