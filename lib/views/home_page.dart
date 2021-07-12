@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:doa_1_0/models/client_model.dart';
+import 'package:doa_1_0/services/api_service.dart';
 import 'package:doa_1_0/services/constants.dart';
 import 'package:doa_1_0/view_models/client_state_provider.dart';
 import 'package:doa_1_0/views/device_page_streambuilder.dart';
@@ -130,6 +131,7 @@ class _HomePageState extends State<HomePage> {
           ? FloatingActionButton(
               backgroundColor: Constants.mainGreen,
               onPressed: () async {
+                ApiService.instance.printUserName();
                 if (!_isSnackbarActive) {
                   showSnack();
                   await context.read<ClientState>().getClientDataFromApi();
@@ -181,7 +183,6 @@ class _HomePageState extends State<HomePage> {
               if (response) {
                 Provider.of<ClientState>(context, listen: false)
                     .setLoggedIn(false);
-
                 Navigator.pushReplacementNamed(
                   context,
                   LandingPage.routeName,
@@ -205,18 +206,9 @@ class _HomePageState extends State<HomePage> {
             : !unit.isActive
                 ? () async {
                     var response = await showDisconnectedUnitDialog(context);
-                    print("tıklandı");
                   }
                 : () async {
-                    /*setState(() {
-                  isLoading = true;
-                });*/
                     try {
-/*                  Unit _unit =
-                      await Provider.of<ClientState>(context, listen: false)
-                          .getUnitDataFromApi(unitId: unit.unitId)
-                          .timeout(Duration(seconds: 5));*/
-
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -227,9 +219,6 @@ class _HomePageState extends State<HomePage> {
                       );
                     } on TimeoutException catch (e) {
                       print(e);
-                      /*   setState(() {
-                    isLoading = false;
-                  });*/
                     }
                   },
         child: Card(

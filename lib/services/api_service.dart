@@ -18,6 +18,7 @@ class ApiService {
   ///
   String _token = '';
   String _userName = '';
+  String _deviceNotificationToken = '';
 
   void setToken(String token) {
     _token = 'bearer $token';
@@ -25,6 +26,14 @@ class ApiService {
 
   void setUserName(String userName) {
     _userName = userName;
+  }
+
+  void setDeviceNotificationToken(String token) {
+    _deviceNotificationToken = token;
+  }
+
+  void printUserName() {
+    print("_userName ? $_userName");
   }
 
   Map<String, String> get headersForGet => {

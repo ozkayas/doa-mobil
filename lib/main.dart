@@ -6,18 +6,24 @@ import 'package:doa_1_0/views/landing_page.dart';
 import 'package:doa_1_0/views/setting_fan.dart';
 import 'package:doa_1_0/views/setting_light.dart';
 import 'package:doa_1_0/views/setting_water.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'views/splash_screen.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     statusBarColor: Colors.transparent, // transparent status bar
   ));
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((value) => runApp(MyApp()));
+  await Firebase.initializeApp();
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+  var token = await messaging.getToken();
+  print(token);
 }
 
 class MyApp extends StatelessWidget {

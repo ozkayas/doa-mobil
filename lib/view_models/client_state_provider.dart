@@ -25,12 +25,18 @@ class ClientState with ChangeNotifier {
     if (response != null) {
       _user = User.fromMap(jsonDecode(response));
     } else {
-      _user = User(token: '', userName: '', isLoggedIn: false);
+      _user = User(
+          token: '',
+          userName: '',
+          isLoggedIn: false,
+          deviceNotificationToken: '');
     }
 
     ApiService.instance.setToken(_user.token);
     ApiService.instance.setUserName(_user.userName);
-    //print(': ${_user.isLoggedIn}');
+    ApiService.instance
+        .setDeviceNotificationToken(_user.deviceNotificationToken);
+
     return _user;
   }
 
