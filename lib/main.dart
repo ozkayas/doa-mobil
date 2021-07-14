@@ -19,11 +19,10 @@ void main() async {
     statusBarColor: Colors.transparent, // transparent status bar
   ));
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
-      .then((value) => runApp(MyApp()));
+      .then((value) => runApp(MyApp())); // portrait mode only
+
   await Firebase.initializeApp();
   FirebaseMessaging messaging = FirebaseMessaging.instance;
-  var token = await messaging.getToken();
-  print(token);
 }
 
 class MyApp extends StatelessWidget {

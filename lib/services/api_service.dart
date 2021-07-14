@@ -15,10 +15,9 @@ class ApiService {
   static final ApiService instance = ApiService._singleton();
 
   /// Cihaz açılışında SharedPref'ten datalar çekilirken bu verilerin de yüklenmesi gerekiyor.
-  ///
+  /// Post header olarak gerekli
   String _token = '';
   String _userName = '';
-  String _deviceNotificationToken = '';
 
   void setToken(String token) {
     _token = 'bearer $token';
@@ -26,10 +25,6 @@ class ApiService {
 
   void setUserName(String userName) {
     _userName = userName;
-  }
-
-  void setDeviceNotificationToken(String token) {
-    _deviceNotificationToken = token;
   }
 
   void printUserName() {
@@ -169,6 +164,19 @@ class ApiService {
       }
     } catch (e) {
       rethrow;
+    }
+  }
+
+  void postDeviceNotificationToken(String token) async {
+    print('device notif token post edildi');
+    try {
+      await http
+          .post(Constants.apiPostDeviceNotificationToken,
+              headers: headersForGet,
+              body: jsonEncode({"UserName": _userName, "Token": token}))
+          .timeout(Duration(seconds: 5));
+    } catch (e) {
+      print(e);
     }
   }
 }

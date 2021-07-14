@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:core';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/client_model.dart';
@@ -19,6 +21,11 @@ class ClientState with ChangeNotifier {
   /// Bu veri sharedPref'te saklaniyor ve LandingPage yuklenirken okunuyor
   User _user;
 
+  Future<String> fetchDeviceNotificationToken() async {
+    var token = await FirebaseMessaging.instance.getToken();
+    return token;
+  }
+
   Future<User> getUserStatusFromDevice() async {
     final prefs = await SharedPreferences.getInstance();
     var response = prefs.getString('user');
@@ -32,10 +39,14 @@ class ClientState with ChangeNotifier {
           deviceNotificationToken: '');
     }
 
+    var deviceNotificationToken = await fetchDeviceNotificationToken();U
+
+    if (deviceNotificationToken != _user.deviceNotificationToken) {
+      ApiService.instance.postDeviceNotificationToken(deviceNotificationToken);
+      _user.deviceNotificationToken = deviceNotificationToken;
+    }
     ApiService.instance.setToken(_user.token);
     ApiService.instance.setUserName(_user.userName);
-    ApiService.instance
-        .setDeviceNotificationToken(_user.deviceNotificationToken);
 
     return _user;
   }
