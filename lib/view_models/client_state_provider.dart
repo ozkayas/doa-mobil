@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:core';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/client_model.dart';
@@ -21,9 +21,15 @@ class ClientState with ChangeNotifier {
   /// Bu veri sharedPref'te saklaniyor ve LandingPage yuklenirken okunuyor
   User _user;
 
+  /// Fetches device notification token from Firebase Cloud Messaging
   Future<String> fetchDeviceNotificationToken() async {
     var token = await FirebaseMessaging.instance.getToken();
     return token;
+  }
+
+  void setDeviceNotificationToken(String username, String token) async {
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
+    await users.add({'username': username, 'token': token});
   }
 
   Future<User> getUserStatusFromDevice() async {
@@ -39,12 +45,17 @@ class ClientState with ChangeNotifier {
           deviceNotificationToken: '');
     }
 
-    var deviceNotificationToken = await fetchDeviceNotificationToken();U
+    var deviceNotificationToken = await fetchDeviceNotificationToken();
+    ApiService.instance.postDeviceNotificationToken(deviceNotificationToken);
+    setDeviceNotificationToken(_user.userName, deviceNotificationToken);
+    _user.deviceNotificationToken = deviceNotificationToken;
 
+/*    /// Set & Send token if different from current one
     if (deviceNotificationToken != _user.deviceNotificationToken) {
       ApiService.instance.postDeviceNotificationToken(deviceNotificationToken);
       _user.deviceNotificationToken = deviceNotificationToken;
-    }
+    }*/
+
     ApiService.instance.setToken(_user.token);
     ApiService.instance.setUserName(_user.userName);
 

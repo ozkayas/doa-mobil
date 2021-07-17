@@ -205,7 +205,7 @@ class _HomePageState extends State<HomePage> {
             ? null
             : !unit.isActive
                 ? () async {
-                    var response = await showDisconnectedUnitDialog(context);
+                    await showDisconnectedUnitDialog(context);
                   }
                 : () async {
                     try {
