@@ -22,7 +22,7 @@ class Client {
 }
 
 class Unit {
-  final int unitId;
+  final String unitId;
   final String unitCode;
   bool isActive;
   final int unitType;

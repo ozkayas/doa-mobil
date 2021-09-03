@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 class ToggleSwitch extends StatefulWidget {
   final bool status;
   final int toggleType;
-  final int unitId;
+  final String unitId;
 
   /// 1.WaterinOn 2.fanOn 3.lightingOn
 

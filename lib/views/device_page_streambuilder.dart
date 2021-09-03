@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 
 class DevicePageStream extends StatefulWidget {
   static String routeName = '/devicePage';
-  final int unitId;
+  final String unitId;
   DevicePageStream({this.unitId});
 
   @override

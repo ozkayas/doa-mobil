@@ -14,7 +14,7 @@ const List<String> _days = ['Pt', 'S', 'Ç', 'P', 'C', 'Ct', 'P'];
 
 class LightSettingPage extends StatefulWidget {
   static String routeName = '/settingsLightPage';
-  final int unitId;
+  final String unitId;
   LightSettingPage({this.unitId});
 
   @override

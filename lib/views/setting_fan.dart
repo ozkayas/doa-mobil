@@ -16,7 +16,7 @@ const List<String> _days = ['Pt', 'S', 'Ç', 'P', 'C', 'Ct', 'P'];
 
 class FanSettingPage extends StatefulWidget {
   static String routeName = '/settingsFanPage';
-  final int unitId;
+  final String unitId;
   FanSettingPage({this.unitId});
 
   @override

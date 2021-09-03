@@ -270,7 +270,7 @@ class ClientState with ChangeNotifier {
     saveUserStatusToDevice();
   }
 
-  Future<bool> toggleSwitch({bool bool, int toggleType, int unitId}) async {
+  Future<bool> toggleSwitch({bool bool, int toggleType, String unitId}) async {
     var _apiService = ApiService.instance;
     var result = await _apiService.toggle(
         toggleStatus: bool, toggleType: toggleType, unitId: unitId);

@@ -109,7 +109,8 @@ class ApiService {
 
   /// switchleri toggle eden fonksiyon,
   /// Eğer işlem API'dan success olarak dönerse true döndürecek, aksi halde false
-  Future<bool> toggle({int unitId, int toggleType, bool toggleStatus}) async {
+  Future<bool> toggle(
+      {String unitId, int toggleType, bool toggleStatus}) async {
     //body: objesi dışarı alınabilir mi diye düşündüm ama sanırım gerek yok.
     final response = await http.post(Constants.apiToggleUrl,
         headers: headersForGet,
