@@ -6,7 +6,7 @@ DOA Mobil Tracking Application, an IoT Project
 
 - Tracking and managing application for [DOA Green Devices](http://doateknoloji.com)
 - Lists and gives a summary of current status of your devices, lets you schedule your device remotely and set some features in real time remotely.
-- In other words, this app is remote controller of big remote technological flowepots :)
+- In other words, this app is remote controller of big remote technological flowerpots :)
 
 ## Technical Summary
 - Back-end communication via secure REST api's using http package
